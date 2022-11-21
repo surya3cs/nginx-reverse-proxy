@@ -25,5 +25,46 @@ RUN rm /etc/nginx/conf.d/*
 COPY nginx.conf /etc/nginx/conf.d
 
 To spin up the docker container i used docker-compose yaml
+version: "3.2"
+services:
+  nginx:
+    build: 
+      context: .
+    image: nginx-reverse-proxy
+    
+    
+    container_name: nginx-reverse-proxy-container
+    
+    ports:
+      - "80:80"
+      
+now try to access the application without port number:http://18.204.89.75
+
+This setup i done throuh again below jenkins declartive pipeline
+
+pipeline {
+    agent any
+    
+tools {
+    dockerTool 'Docker'
+}
+
+    stages {
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/surya3cs/nginx-reverse-proxy.git'
+            }
+        }
+        
+        stage('ngnix-reverse-proxy') {
+            steps {
+               
+                sh 'sudo docker-compose up -d'
+            }
+        }
+        
+    }
+}
 
 
+T
